@@ -1,0 +1,119 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Izorosi project</title>
+    <link rel="stylesheet" href="stylejs.css">
+</head>
+<body>
+    <div class="container">
+        <form action="" class="multistepform">
+        <div class="first-slot active">
+            <h1>Personal information</h1>
+            <input type="text" placeholder="Firstname" class="fill" id="Firstname">
+            <input type="text" placeholder="Lastname" class="fill" id="Lastnaame">
+            <input type="number" placeholder="age" class="fill" id="age">
+            <input type="text" placeholder="NIN" class="fill" id="NIN">
+            <button id="next-btn">Next</button>
+        </div>
+
+        <div class="first-slot">
+            <h1>Contact Information</h1>
+            <input type="email" placeholder="email" class="fill">
+            <input type="text" placeholder="Phone number" class="fill" id="phone number">
+            <input type="text" placeholder="state of origin" class="fill" id="state of origin">
+            <button id="prev-btn">prev</button>
+            <button id="next-btn">Next</button>
+        </div>
+        <div class="first-slot">
+            <h1>Sumarry</h1>
+            <div class="form-page"></div>
+            <button type="button" id="prev">Prev</button>
+            <button type="button" id="completed">Submit</button>
+        </div>
+        </form>
+    </div>
+    <script>
+     const form = document.querySelector('.multistepform');
+const steps = document.querySelectorAll('.first-slot');
+const nextBtns = document.querySelectorAll('#next-btn, .next-btn');
+const prevBtns = document.querySelectorAll('#prev-btn, .prev-btn');
+const completed = document.getElementById('completed');
+const summaryBox = document.querySelector('.form-page');
+
+let currentStep = 0;
+
+// Next buttons
+nextBtns.forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (validateStep(currentStep)) {
+      currentStep++;
+      updateFormSteps();
+    }
+  });
+});
+
+// Prev buttons
+prevBtns.forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    currentStep--;
+    updateFormSteps();
+  });
+});
+
+// Submit
+completed.addEventListener('click', (e) => {
+  e.preventDefault();
+  alert('Form Submitted Successfully!');
+});
+
+// Update step visibility
+function updateFormSteps() {
+  steps.forEach((step, index) => {
+    step.classList.toggle('active', index === currentStep);
+  });
+
+  // If on last step, fill the summary
+  if (currentStep === steps.length - 1) {
+    showSummary();
+  }
+}
+
+// Validate fields in the current step
+function validateStep(stepIndex) {
+  const inputs = steps[stepIndex].querySelectorAll('input');
+  for (let input of inputs) {
+    if (!input.value.trim()) {
+      alert('Please fill out all fields.');
+      return false;
+    }
+  }
+  return true;
+}
+
+// Show summary of all inputs
+function showSummary() {
+  const firstname = document.getElementById('Firstname').value;
+  const lastname = document.getElementById('Lastnaame').value;
+  const age = document.getElementById('age').value;
+  const nin = document.getElementById('NIN').value;
+  const email = steps[1].querySelector('input[type="email"]').value;
+  const phone = document.getElementById('phone number').value;
+  const state = document.getElementById('state of origin').value;
+
+  summaryBox.innerHTML = `
+    <p><strong>Firstname:</strong> ${firstname}</p>
+    <p><strong>Lastname:</strong> ${lastname}</p>
+    <p><strong>Age:</strong> ${age}</p>
+    <p><strong>NIN:</strong> ${nin}</p>
+    <p><strong>Email:</strong> ${email}</p>
+    <p><strong>Phone:</strong> ${phone}</p>
+    <p><strong>State of Origin:</strong> ${state}</p>
+  `;
+}
+
+    </script>
+</body>
+</html>
